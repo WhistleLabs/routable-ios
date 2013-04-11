@@ -49,6 +49,7 @@
 @interface UPRouterOptions ()
 @property (readwrite, nonatomic, strong) Class openClass;
 @property (readwrite, nonatomic, copy) RouterOpenCallback callback;
+@property (readwrite, nonatomic, strong) NSMutableArray *navigationControllers;
 @end
 
 @implementation UPRouterOptions
@@ -105,6 +106,7 @@
 // Map of final URL NSStrings -> RouterParams
 // i.e. "users/16"
 @property (readwrite, nonatomic, strong) NSMutableDictionary *cachedRoutes;
+@property (readwrite, nonatomic, strong) NSMutableArray *navigationControllers;
 
 @end
 
@@ -115,7 +117,7 @@
 
 @implementation UPRouter
 
-@synthesize navigationController = _navigationController;
+@synthesize rootNavigationController = _rootNavigationController;
 @synthesize routes = _routes;
 @synthesize cachedRoutes = _cachedRoutes;
 
@@ -123,9 +125,15 @@
   if ((self = [super init])) {
     self.routes = [NSMutableDictionary new];
     self.cachedRoutes = [NSMutableDictionary new];
+    self.navigationControllers = [NSMutableArray new];
   }
 
   return self;
+}
+
+- (UINavigationController *)currentNavigationController {
+    NSUInteger count = [self.navigationControllers count];
+    return count > 0 ? [self.navigationControllers objectAtIndex:count - 1] : self.rootNavigationController;
 }
 
 - (void)map:(NSString *)format toCallback:(RouterOpenCallback)callback {
@@ -170,35 +178,33 @@
     return;
   }
   
-  if (!self.navigationController) {
+  if (!self.rootNavigationController) {
     @throw [NSException exceptionWithName:@"NavigationControllerNotProvided"
-                                   reason:@"Router#navigationController has not been set to a UINavigationController instance"
+                                   reason:@"Router#rootNavigationController has not been set to a UINavigationController instance"
                                  userInfo:nil];
   }
   
   UIViewController *controller = [self controllerForRouterParams:params];
-  
-  if (self.navigationController.presentedViewController) {
-    [self.navigationController dismissViewControllerAnimated:animated completion:nil];
-  }
-  
+
   if ([options isModal]) {
     if ([controller.class isSubclassOfClass:UINavigationController.class]) {
-      [self.navigationController presentViewController:controller
-                                              animated:animated
-                                            completion:nil];
+      [self.currentNavigationController presentViewController:controller
+                                                     animated:animated
+                                                   completion:nil];
+      [self.navigationControllers addObject:controller];
     }
     else {
       UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
       navigationController.modalPresentationStyle = controller.modalPresentationStyle;
       navigationController.modalTransitionStyle = controller.modalTransitionStyle;
-      [self.navigationController presentViewController:navigationController
-                                              animated:animated
-                                            completion:nil];
+      [self.currentNavigationController presentViewController:navigationController
+                                                     animated:animated
+                                                   completion:nil];
+      [self.navigationControllers addObject:navigationController];
     }
   }
   else {
-    [self.navigationController pushViewController:controller animated:animated];
+    [self.currentNavigationController pushViewController:controller animated:animated];
   }
 }
 
@@ -207,11 +213,14 @@
 }
 
 - (void)pop:(BOOL)animated {
-  if (self.navigationController.presentedViewController) {
-    [self.navigationController dismissViewControllerAnimated:animated completion:nil];
+  if ([self.currentNavigationController.viewControllers count] <= 1) {
+    [self.currentNavigationController dismissViewControllerAnimated:animated completion:nil];
+    if ([self.navigationControllers count] > 0) {
+      [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
+    }
   }
   else {
-    [self.navigationController popViewControllerAnimated:animated];
+    [self.currentNavigationController popViewControllerAnimated:animated];
   }
 }
 

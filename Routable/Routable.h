@@ -148,9 +148,9 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
 ///-------------------------------
 
 /**
- The `UINavigationController` instance which mapped `UIViewController`s will be pushed onto.
+ The root `UINavigationController` instance which cannot be popped beyond
  */
-@property (readwrite, nonatomic, strong) UINavigationController *navigationController;
+@property (readwrite, nonatomic, strong) UINavigationController *rootNavigationController;
 
 /**
  Pop to the last `UIViewController` mapped with the router; this will either dismiss the presented `UIViewController` (i.e. modal) or pop the top view controller in the navigationController. The transition is animated.
