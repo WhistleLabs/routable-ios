@@ -224,6 +224,15 @@
   }
 }
 
+- (UIViewController *)controllerForURL:(NSString *)url {
+  RouterParams *params = [self routerParamsForUrl:url];
+  UPRouterOptions *options = params.routerOptions;
+  if (options.callback) {
+    return nil;
+  }
+  return [self controllerForRouterParams:params];
+}
+
 ///////
 
 - (RouterParams *)routerParamsForUrl:(NSString *)url {

@@ -223,4 +223,11 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  */
  - (void)open:(NSString *)url animated:(BOOL)animated;
 
+/**
+ Get the controller for a given URL.  This is very useful for unit testing, and
+ if you want to know what controller maps to a route without opening it.
+ @param url The URL being opened (i.e. "users/16")
+ */
+- (UIViewController *)controllerForURL:(NSString *)url;
+
 @end
