@@ -244,7 +244,10 @@
     return [self.cachedRoutes objectForKey:url];
   }
   
-  NSArray *givenParts = [url componentsSeparatedByString:@"/"];
+  NSArray *pathAndQueryParams = [url componentsSeparatedByString:@"?"];
+  NSString *path = [pathAndQueryParams objectAtIndex:0];
+    
+  NSArray *givenParts = [path componentsSeparatedByString:@"/"];
   
   RouterParams *openParams = nil;
   for (NSString *routerUrl in self.routes.allKeys) {
@@ -270,6 +273,20 @@
     @throw [NSException exceptionWithName:@"RouteNotFoundException"
                                    reason:[NSString stringWithFormat:ROUTE_NOT_FOUND_FORMAT, url]
                                  userInfo:nil];
+  }
+    
+  if ([pathAndQueryParams count] > 1) {
+    NSMutableDictionary *givenParams = [openParams.openParams mutableCopy];
+    NSArray *queryParams = [[pathAndQueryParams objectAtIndex:1] componentsSeparatedByString:@"@"];
+    for (NSString *param in queryParams) {
+      NSArray *keyAndValue = [param componentsSeparatedByString:@"="];
+      if ([keyAndValue count] < 2) {
+        continue;
+      }
+      [givenParams setObject:[keyAndValue objectAtIndex:1]
+                      forKey:[keyAndValue objectAtIndex:0]];
+    }
+    openParams.openParams = givenParams;
   }
   
   [self.cachedRoutes setObject:openParams forKey:url];
