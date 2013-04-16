@@ -163,6 +163,12 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  */
 - (void)pop:(BOOL)animated;
 
+/**
+ Dismiss the top `UIViewController` presented modally.
+ @param animated Whether or not the transition is animated;
+ */
+- (void)popModalViewController:(BOOL)animated;
+
 ///-------------------------------
 /// @name Mapping URLs
 ///-------------------------------

@@ -214,13 +214,17 @@
 
 - (void)pop:(BOOL)animated {
   if ([self.currentNavigationController.viewControllers count] <= 1) {
-    [self.currentNavigationController dismissViewControllerAnimated:animated completion:nil];
-    if ([self.navigationControllers count] > 0) {
-      [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
-    }
+    [self popModalViewController:animated];
   }
   else {
     [self.currentNavigationController popViewControllerAnimated:animated];
+  }
+}
+
+- (void)popModalViewController:(BOOL)animated {
+  [self.currentNavigationController dismissViewControllerAnimated:animated completion:nil];
+  if ([self.navigationControllers count] > 0) {
+    [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
   }
 }
 
