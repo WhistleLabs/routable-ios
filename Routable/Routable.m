@@ -28,17 +28,20 @@
 
 @interface RouterParams : NSObject
 @property (readwrite, nonatomic, strong) UPRouterOptions *routerOptions;
+@property (readwrite, nonatomic, strong) NSDictionary *extraDefaultParams;
 @property (readwrite, nonatomic, strong) NSDictionary *openParams;
 @end
 
 @implementation RouterParams
 @synthesize routerOptions = _routerOptions;
+@synthesize extraDefaultParams = _extraDefaultParams;
 @synthesize openParams = _openParams;
 
 - (NSDictionary *)getControllerParams {
   NSMutableDictionary *controllerParams = [NSMutableDictionary new];
   
   [controllerParams addEntriesFromDictionary:self.routerOptions.defaultParams];
+  [controllerParams addEntriesFromDictionary:self.extraDefaultParams];
   [controllerParams addEntriesFromDictionary:self.openParams];
   
   return controllerParams;
@@ -165,11 +168,15 @@
 }
 
 - (void)open:(NSString *)url {
-  [self open:url animated:YES];
+  [self open:url animated:YES extraDefaultParams:nil];
 }
 
 - (void)open:(NSString *)url animated:(BOOL)animated {
-  RouterParams *params = [self routerParamsForUrl:url];
+  [self open:url animated:animated extraDefaultParams:nil];
+}
+
+- (void)open:(NSString *)url animated:(BOOL)animated extraDefaultParams:(NSDictionary *)extraDefaultParams {
+  RouterParams *params = [self routerParamsForUrl:url extraDefaultParams:extraDefaultParams];
   UPRouterOptions *options = params.routerOptions;
   
   if (options.callback) {
@@ -229,7 +236,7 @@
 }
 
 - (UIViewController *)controllerForURL:(NSString *)url {
-  RouterParams *params = [self routerParamsForUrl:url];
+  RouterParams *params = [self routerParamsForUrl:url extraDefaultParams:nil];
   UPRouterOptions *options = params.routerOptions;
   if (options.callback) {
     return nil;
@@ -239,7 +246,7 @@
 
 ///////
 
-- (RouterParams *)routerParamsForUrl:(NSString *)url {
+- (RouterParams *)routerParamsForUrl:(NSString *)url extraDefaultParams:(NSDictionary *)extraDefaultParams {
   if ([self.cachedRoutes objectForKey:url]) {
     return [self.cachedRoutes objectForKey:url];
   }
@@ -266,6 +273,7 @@
     openParams = [RouterParams new];
     openParams.openParams = givenParams;
     openParams.routerOptions = routerOptions;
+    openParams.extraDefaultParams = extraDefaultParams;
     break;
   }
   
