@@ -7,6 +7,7 @@
 //
 
 #import "Routable.h"
+#import "DZPopupSheetController.h"
 
 @implementation Routable
 
@@ -74,6 +75,7 @@
   return [[UPRouterOptions new] withTransitionStyle:style];
 }
 
+
 + (UPRouterOptions *)forDefaultParams:(NSDictionary *)defaultParams {
   return [[UPRouterOptions new] forDefaultParams:defaultParams];
 }
@@ -90,6 +92,16 @@
 
 - (UPRouterOptions *)withTransitionStyle:(UIModalTransitionStyle)style {
   self.transitionStyle = style;
+  return self;
+}
+
+- (UPRouterOptions *)popup {
+  self.popup = true;
+  return self;
+}
+
+- (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets {
+  self.popupEdgeInsets = edgeInsets;
   return self;
 }
 
@@ -110,6 +122,7 @@
 // i.e. "users/16"
 @property (readwrite, nonatomic, strong) NSMutableDictionary *cachedRoutes;
 @property (readwrite, nonatomic, strong) NSMutableArray *navigationControllers;
+@property (readwrite, nonatomic, strong) DZPopupSheetController *popupSheet;
 
 @end
 
@@ -210,6 +223,22 @@
       [self.navigationControllers addObject:navigationController];
     }
   }
+  else if ([options isPopup]) {
+    if (self.popupSheet) {
+      [self.popupSheet dismiss];
+      self.popupSheet = nil;
+    }
+      
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    initWithRootViewController:controller];
+    [navigationController setNavigationBarHidden:YES];
+    self.popupSheet = [[DZPopupSheetController alloc] initWithContentViewController:navigationController];
+    self.popupSheet.frameStyle = DZPopupSheetFrameStyleShadowed;
+    self.popupSheet.frameEdgeInsets = [options popupEdgeInsets];
+    [self.popupSheet present];
+
+    [self.navigationControllers addObject:navigationController];
+  }
   else {
     [self.currentNavigationController pushViewController:controller animated:animated];
   }
@@ -230,6 +259,13 @@
 
 - (void)popModalViewController:(BOOL)animated {
   [self.currentNavigationController dismissViewControllerAnimated:animated completion:nil];
+  if ([self.navigationControllers count] > 0) {
+    [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
+  }
+}
+
+- (void)popPopupSheet {
+  [self.popupSheet dismiss];
   if ([self.navigationControllers count] > 0) {
     [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
   }

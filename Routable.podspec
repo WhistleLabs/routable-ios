@@ -9,4 +9,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Routable/*.{h,m}'
   s.requires_arc = true
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
+  s.dependency   "DZPopupController", "1.7"
 end

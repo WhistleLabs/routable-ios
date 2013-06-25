@@ -63,6 +63,15 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  */
 + (UPRouterOptions *)withTransitionStyle:(UIModalTransitionStyle)style;
 /**
+ @return A new instance of `UPRouterOptions`, setting a popup presentation format.
+ */
++ (UPRouterOptions *)popup;
+/**
+ @return A new instance of `UPRouterOptions`, setting the popup's edge insets.
+ @param edgeInsets The `UIEdgeInsets` for the popup
+ */
++ (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets;
+/**
  @return A new instance of `UPRouterOptions`, setting the defaultParams
  @param defaultParams The default parameters which are passed when opening the URL
  */
@@ -82,6 +91,15 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @param style The `UIModalTransitionStyle` attached to the mapped `UIViewController`
  */
 - (UPRouterOptions *)withTransitionStyle:(UIModalTransitionStyle)style;
+/**
+ @return The same instance of `UPRouterOptions`, setting a popup presentation format.
+ */
+- (UPRouterOptions *)popup;
+/**
+ @return The same instance of `UPRouterOptions`, setting the popup's edge insets.
+ @param edgeInsets The `UIEdgeInsets` for the popup
+ */
+- (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets;
 /**
  @return The same instance of `UPRouterOptions`, setting the defaultParams
  @param defaultParams The default parameters which are passed when opening the URL
@@ -104,6 +122,15 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  The property determining the `UIModalTransitionStyle` assigned to the mapped `UIViewController` instance. This is always assigned, regardless of whether or not `modal` is true.
  */
 @property (readwrite, nonatomic) UIModalTransitionStyle transitionStyle;
+
+/**
+ The property determining if the mapped `UIViewController` should be opened as a popup or pushed in the navigation stack.
+ */
+@property (readwrite, nonatomic, getter=isPopup) BOOL popup;
+/**
+ The property determining the `UIEdgeInsets` for the popup.
+ */
+@property (readwrite, nonatomic) UIEdgeInsets popupEdgeInsets;
 /**
  Default parameters sent to the `UIViewController`'s initWithRouterParams: method. This is useful if you want to pass some non-`NSString` information. These parameters will be overwritten by any parameters passed in the URL in open:.
  */
@@ -168,6 +195,11 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @param animated Whether or not the transition is animated;
  */
 - (void)popModalViewController:(BOOL)animated;
+
+/**
+ Dismiss any `UIViewController` presented as a popup.
+ */
+- (void)popPopupSheet;
 
 ///-------------------------------
 /// @name Mapping URLs
