@@ -233,7 +233,7 @@
                                                     initWithRootViewController:controller];
     [navigationController setNavigationBarHidden:YES];
     self.popupSheet = [[DZPopupSheetController alloc] initWithContentViewController:navigationController];
-    self.popupSheet.frameStyle = DZPopupSheetFrameStyleShadowed;
+    self.popupSheet.frameStyle = DZPopupSheetFrameStyleNone;
     self.popupSheet.frameEdgeInsets = [options popupEdgeInsets];
     [self.popupSheet present];
 
