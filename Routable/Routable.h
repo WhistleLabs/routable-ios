@@ -240,7 +240,7 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  A convenience method for opening a URL using `UIApplication` `openURL:`.
  @param url The URL the OS will open (i.e. "http://google.com")
  */
-- (void)openExternal:(NSString *)url;
+- (UIViewController *)openExternal:(NSString *)url;
 
 /**
  Triggers the appropriate functionality for a mapped URL, such as an anonymous function or opening a `UIViewController`. `UIViewController` transitions will be animated;
@@ -249,7 +249,7 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @exception NavigationControllerNotProvided Thrown if url opens a `UIViewController` and navigationController has not been assigned
  @exception RoutableInitializerNotFound Thrown if the mapped `UIViewController` instance does not implement initWithParams:
  */
-- (void)open:(NSString *)url;
+- (UIViewController *)open:(NSString *)url;
 
 /**
  Triggers the appropriate functionality for a mapped URL, such as an anonymous function or opening a `UIViewController`
@@ -259,7 +259,7 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @exception NavigationControllerNotProvided Thrown if url opens a `UIViewController` and navigationController has not been assigned
  @exception RoutableInitializerNotFound Thrown if the mapped `UIViewController` instance does not implement initWithParams:
  */
- - (void)open:(NSString *)url animated:(BOOL)animated;
+ - (UIViewController *)open:(NSString *)url animated:(BOOL)animated;
 
 /**
  Triggers the appropriate functionality for a mapped URL, such as an anonymous function or opening a `UIViewController`
@@ -270,7 +270,9 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @exception NavigationControllerNotProvided Thrown if url opens a `UIViewController` and navigationController has not been assigned
  @exception RoutableInitializerNotFound Thrown if the mapped `UIViewController` instance does not implement initWithParams:
  */
-- (void)open:(NSString *)url animated:(BOOL)animated extraDefaultParams:(NSDictionary *)extraDefaultParams;
+- (UIViewController *)open:(NSString *)url
+                  animated:(BOOL)animated
+        extraDefaultParams:(NSDictionary *)extraDefaultParams;
 
 /**
  Get the controller for a given URL.  This is very useful for unit testing, and

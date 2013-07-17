@@ -180,22 +180,22 @@
   [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
-- (void)open:(NSString *)url {
-  [self open:url animated:YES extraDefaultParams:nil];
+- (UIViewController *)open:(NSString *)url {
+  return [self open:url animated:YES extraDefaultParams:nil];
 }
 
-- (void)open:(NSString *)url animated:(BOOL)animated {
-  [self open:url animated:animated extraDefaultParams:nil];
+- (UIViewController *)open:(NSString *)url animated:(BOOL)animated {
+  return [self open:url animated:animated extraDefaultParams:nil];
 }
 
-- (void)open:(NSString *)url animated:(BOOL)animated extraDefaultParams:(NSDictionary *)extraDefaultParams {
+- (UIViewController *)open:(NSString *)url animated:(BOOL)animated extraDefaultParams:(NSDictionary *)extraDefaultParams {
   RouterParams *params = [self routerParamsForUrl:url extraDefaultParams:extraDefaultParams];
   UPRouterOptions *options = params.routerOptions;
   
   if (options.callback) {
     RouterOpenCallback callback = options.callback;
     callback([params getControllerParams]);
-    return;
+    return nil;
   }
   
   if (!self.rootNavigationController) {
@@ -242,6 +242,7 @@
   else {
     [self.currentNavigationController pushViewController:controller animated:animated];
   }
+  return controller;
 }
 
 - (void)pop {
