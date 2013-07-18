@@ -7,7 +7,6 @@
 //
 
 #import "Routable.h"
-#import "DZPopupSheetController.h"
 
 @implementation Routable
 
@@ -75,6 +74,10 @@
   return [[UPRouterOptions new] withTransitionStyle:style];
 }
 
++ (UPRouterOptions *)withPopupEntranceStyle:(DZPopupTransitionStyle)entranceStyle
+                                  exitStyle:(DZPopupTransitionStyle)exitStyle {
+  return [[UPRouterOptions new] withPopupEntranceStyle:entranceStyle exitStyle:exitStyle];
+}
 
 + (UPRouterOptions *)forDefaultParams:(NSDictionary *)defaultParams {
   return [[UPRouterOptions new] forDefaultParams:defaultParams];
@@ -102,6 +105,13 @@
 
 - (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets {
   self.popupEdgeInsets = edgeInsets;
+  return self;
+}
+
+- (UPRouterOptions *)withPopupEntranceStyle:(DZPopupTransitionStyle)entranceStyle
+                                  exitStyle:(DZPopupTransitionStyle)exitStyle {
+  self.popupEntranceStyle = entranceStyle;
+  self.popupExitStyle = exitStyle;
   return self;
 }
 
@@ -234,6 +244,8 @@
     [navigationController setNavigationBarHidden:YES];
     self.popupSheet = [[DZPopupSheetController alloc] initWithContentViewController:navigationController];
     self.popupSheet.frameStyle = DZPopupSheetFrameStyleNone;
+    self.popupSheet.entranceStyle = [options popupEntranceStyle];
+    self.popupSheet.exitStyle = [options popupExitStyle];
     self.popupSheet.frameEdgeInsets = [options popupEdgeInsets];
     [self.popupSheet present];
 

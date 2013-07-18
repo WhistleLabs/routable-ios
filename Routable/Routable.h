@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DZPopupSheetController.h"
 
 @class UPRouter;
 
@@ -72,6 +73,11 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  */
 + (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets;
 /**
+ @return A new instance of `UPRouterOptions`, setting the popup's entrance and exit style.
+ */
++ (UPRouterOptions *)withPopupEntranceStyle:(DZPopupTransitionStyle)entranceStyle
+                                  exitStyle:(DZPopupTransitionStyle)exitStyle;
+/**
  @return A new instance of `UPRouterOptions`, setting the defaultParams
  @param defaultParams The default parameters which are passed when opening the URL
  */
@@ -100,6 +106,11 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  @param edgeInsets The `UIEdgeInsets` for the popup
  */
 - (UPRouterOptions *)withPopupEdgeInsets:(UIEdgeInsets)edgeInsets;
+/**
+ @return A new instance of `UPRouterOptions`, setting the popup's entrance and exit style.
+ */
+- (UPRouterOptions *)withPopupEntranceStyle:(DZPopupTransitionStyle)entranceStyle
+                                  exitStyle:(DZPopupTransitionStyle)exitStyle;
 /**
  @return The same instance of `UPRouterOptions`, setting the defaultParams
  @param defaultParams The default parameters which are passed when opening the URL
@@ -131,6 +142,14 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  The property determining the `UIEdgeInsets` for the popup.
  */
 @property (readwrite, nonatomic) UIEdgeInsets popupEdgeInsets;
+/**
+ The property determining the entrance `DZPopupTransitionStyle` for the popup.
+ */
+@property (readwrite, nonatomic) DZPopupTransitionStyle popupEntranceStyle;
+/**
+ The property determining the exit `DZPopupTransitionStyle` for the popup.
+ */
+@property (readwrite, nonatomic) DZPopupTransitionStyle popupExitStyle;
 /**
  Default parameters sent to the `UIViewController`'s initWithRouterParams: method. This is useful if you want to pass some non-`NSString` information. These parameters will be overwritten by any parameters passed in the URL in open:.
  */
