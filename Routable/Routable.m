@@ -296,7 +296,7 @@
 ///////
 
 - (RouterParams *)routerParamsForUrl:(NSString *)url extraDefaultParams:(NSDictionary *)extraDefaultParams {
-  if ([self.cachedRoutes objectForKey:url]) {
+  if ([self.cachedRoutes objectForKey:url] && [extraDefaultParams count] == 0) {
     return [self.cachedRoutes objectForKey:url];
   }
   
