@@ -354,6 +354,9 @@
 - (NSDictionary *)paramsForUrlComponents:(NSArray *)givenUrlComponents
                  withRouterUrlComponents:(NSArray *)routerUrlComponents {
   NSMutableDictionary *params = [NSMutableDictionary new];
+
+  [params setObject:[routerUrlComponents componentsJoinedByString:@"/"]
+             forKey:@"routeURL"];
   
   for (int i = 0; i < routerUrlComponents.count; i++) {
     NSString *routerComponent = routerUrlComponents[i];
