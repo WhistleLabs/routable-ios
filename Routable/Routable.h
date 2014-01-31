@@ -216,9 +216,22 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
 - (void)popModalViewController:(BOOL)animated;
 
 /**
+ Dismiss the top `UIViewController` presented modally.
+ @param animated Whether or not the transition is animated;
+ @param completion A block called after the view controller has been dismissed
+ */
+- (void)popModalViewController:(BOOL)animated completion:(void(^)(void))completion;
+
+/**
  Dismiss any `UIViewController` presented as a popup.
  */
 - (void)popPopupSheet;
+
+/**
+ Dismiss any `UIViewController` presented as a popup.
+ @param completion A block called after the view controller has been dismissed
+ */
+- (void)popPopupSheetWithCompletion:(void(^)(void))completion;
 
 ///-------------------------------
 /// @name Mapping URLs

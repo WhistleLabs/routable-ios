@@ -271,14 +271,22 @@
 }
 
 - (void)popModalViewController:(BOOL)animated {
-  [self.currentNavigationController dismissViewControllerAnimated:animated completion:nil];
+  [self popModalViewController:animated completion:nil];
+}
+
+- (void)popModalViewController:(BOOL)animated completion:(void(^)(void))completion {
+  [self.currentNavigationController dismissViewControllerAnimated:animated completion:completion];
   if ([self.navigationControllers count] > 0) {
     [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
   }
 }
 
 - (void)popPopupSheet {
-  [self.popupSheet dismiss];
+  [self popPopupSheetWithCompletion:nil];
+}
+
+- (void)popPopupSheetWithCompletion:(void(^)(void))completion {
+  [self.popupSheet dismissWithCompletion:completion];
   if ([self.navigationControllers count] > 0) {
     [self.navigationControllers removeObjectAtIndex:[self.navigationControllers count] - 1];
   }
