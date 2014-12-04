@@ -235,7 +235,7 @@
   }
   else if ([options isPopup]) {
     if (self.popupSheet) {
-      [self.popupSheet dismiss];
+      [self popPopupSheet];
       self.popupSheet = nil;
     }
       
